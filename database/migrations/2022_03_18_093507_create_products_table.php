@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('image');
             $table->string('name');
             $table->string('description');
-            $table->float('price');
+            $table->integer('price');
             $table->integer('quantity');
             $table->timestamps();
         });
