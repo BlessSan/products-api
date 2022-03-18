@@ -4,24 +4,42 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
     public function index()
     {
-      return Product::all();
+      $products = Product::all();
+
+      return response()->json([
+        'products'=> $products
+      ], 200);
     }
 
-    public function show(Product $product)
+    public function show($request)
     {
+      $product = Product::where('name', $request)
+                        ->orWhere('description', $request)
+                        ->orWhere('price', $request)
+                        ->orWhere('quantity', $request)
+                        ->get();
       return $product;
     }
 
     public function create(Request $request)
     {
-      $product = Product::create($request->all());
+      $request->validate([
+        'image'=>'required|url',
+        'name'=>'required',
+        'description'=>'required',
+        'price'=>'required|Integer',
+        'quantity'=>'required|Integer'
+      ]);
 
-      return response()->json($product, 201);
+      Product::create($request->all());
+
+      return redirect()->action([ProductController::class,"index"])->with('success','Product added');
     }
 
     public function update(Request $request, Product $product)
