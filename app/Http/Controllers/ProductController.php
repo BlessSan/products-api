@@ -10,24 +10,29 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-      $pagination = $request->has('paginate') ? $request->paginate : 5;
-      $orderBy = $request->has('orderBy') ? $request->orderBy : 'id';
-      $direction = $request->has('direction') ? $request->direction : 'asc';
-      $products = Product::orderBy($orderBy, $direction)->paginate($pagination);
+      // products? paginate & orderBy & direction
+      $pagination = $request->has('paginate') && !empty($request->paginate) ? $request->paginate : 5;
+      $orderBy = $request->has('orderBy') && !empty($request->orderBy) ? $request->orderBy : 'id';
+      $direction = $request->has('direction') && !empty($request->direction) ? $request->direction : 'asc';
+      $products = Product::orderBy($orderBy, $direction)
+                         ->paginate($pagination);
+                         
 
-      return response()->json([
-        'products'=> $products
-      ], 200);
+      return $products;
     }
 
     public function show(Request $request, $category)
     {
+      // products/search/{category}? value & orderBy & direction & paginate
       $value = $request->value;
-      $orderBy = $request->has('orderBy') ? $request->orderBy : 'id';
-      $direction = $request->has('direction') ? $request->direction : 'asc';
+      $pagination = $request->has('paginate') && !empty($request->paginate) ? $request->paginate : 5;
+      $orderBy = $request->has('orderBy') && !empty($request->orderBy) ? $request->orderBy : 'id';
+      $direction = $request->has('direction') && !empty($request->direction) ? $request->direction : 'asc';
       $product = Product::where($category, $value)
                         ->orderBy($orderBy, $direction)
-                        ->get();
+                        ->paginate($pagination)
+                        ->withQueryString();
+                        
       return $product;
     }
 
