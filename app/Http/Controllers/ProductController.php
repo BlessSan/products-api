@@ -8,9 +8,14 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-      $products = Product::all();
+      if($request->has('paginate'))
+        $pagination = $request->paginate;
+      else
+        $pagination = 5;
+
+      $products = Product::paginate($pagination);
 
       return response()->json([
         'products'=> $products
