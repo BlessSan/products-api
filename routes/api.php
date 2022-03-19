@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Route::delete('products/{product}', 'ProductController@delete');
 
 Route::get('products', [ProductController::class, 'index']);
-Route::get('products/{product}', [ProductController::class, 'show']);
+Route::get('products/search/{category}', [ProductController::class, 'show']);
 Route::post('products', [ProductController::class, 'create']);
 Route::put('products/{product}', [ProductController::class, 'update']);
 // Route::delete('products/{product}', 'ProductController@delete');
