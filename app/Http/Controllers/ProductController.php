@@ -10,7 +10,7 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-      $pagination = $request->has('paginate') ? $request->paginate : $pagination = 5;
+      $pagination = $request->has('paginate') ? $request->paginate : 5;
       $orderBy = $request->has('orderBy') ? $request->orderBy : 'id';
       $direction = $request->has('direction') ? $request->direction : 'asc';
       $products = Product::orderBy($orderBy, $direction)->paginate($pagination);
