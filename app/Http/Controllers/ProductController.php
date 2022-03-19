@@ -10,24 +10,23 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-      if($request->has('paginate'))
-        $pagination = $request->paginate;
-      else
-        $pagination = 5;
-
-      $products = Product::paginate($pagination);
+      $pagination = $request->has('paginate') ? $request->paginate : $pagination = 5;
+      $orderBy = $request->has('orderBy') ? $request->orderBy : 'id';
+      $direction = $request->has('direction') ? $request->direction : 'asc';
+      $products = Product::orderBy($orderBy, $direction)->paginate($pagination);
 
       return response()->json([
         'products'=> $products
       ], 200);
     }
 
-    public function show($request)
+    public function show(Request $request, $category)
     {
-      $product = Product::where('name', $request)
-                        ->orWhere('description', $request)
-                        ->orWhere('price', $request)
-                        ->orWhere('quantity', $request)
+      $value = $request->value;
+      $orderBy = $request->has('orderBy') ? $request->orderBy : 'id';
+      $direction = $request->has('direction') ? $request->direction : 'asc';
+      $product = Product::where($category, $value)
+                        ->orderBy($orderBy, $direction)
                         ->get();
       return $product;
     }
